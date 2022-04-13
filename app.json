@@ -1,0 +1,50 @@
+{
+  "name": "Spotify-Loader",
+  "description": "Telegram bot to upload spotify playlist/artist/album/track music file to telegram.",
+  "keywords": [
+    "telegram",
+    "best",
+    "bulk",
+    "downloader",
+    "spotify",
+    "artist",
+    "album",
+    "track"
+  ],
+  "success_url": "https://github.com/X-Gorn/Spotify-Loader",
+  "website": "https://github.com/X-Gorn",
+  "repository": "https://github.com/X-Gorn/Spotify-Loader",
+  "env": {
+    "BOT_TOKEN": {
+      "description": "Your bot token, as a string. Get this value from https://t.me/BotFather",
+      "value": ""
+    },
+    "API_ID": {
+      "description": "Your API ID, as a string. Get this value from https://my.telegram.org",
+      "value": ""
+    },
+    "API_HASH": {
+      "description": "Your API Hash, as a string. Get this value from https://my.telegram.org",
+      "value": ""
+    },
+    "OWNER_ID": {
+      "description": "Your Telegram ID, not username. Get this value by opening https://t.me/MissRose_bot and send /id to bot. Leave empty if you want bot as public.",
+      "value": "",
+      "required": false
+    }
+  },
+  "addons": [
+  ],
+  "buildpacks": [{
+    "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
+  }, {
+    "url": "heroku/python"
+  }],
+  "stack": "heroku-20",
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  }
+}
