@@ -1,6 +1,6 @@
 # Copyright by X-Noid
 
-import os, time, shutil, random, glob, asyncio, uuid, shlex
+import os, time, shutil, random, glob, asyncio, uuid, shlex, re
 from typing import Tuple
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
@@ -67,7 +67,7 @@ async def start(bot, update):
     await update.reply(f'I\'m Spotify-Loader\nYou can download spotify playlist/artist/album/track music using this bot!', True, reply_markup=InlineKeyboardMarkup(START_BUTTONS))
 
 
-@xbot.on_message(filters.regex('open(.)spotify(.)com|track|album|artist|playlist') & OWNER_FILTER & filters.private)
+@xbot.on_message(filters.regex(r'http.*:[/][/]open[.]spotify[.]com.(track|album|artist|playlist)', re.M) & OWNER_FILTER & filters.private)
 async def downloader(bot, update):
     await update.reply('Select Options Below!', True, reply_markup=InlineKeyboardMarkup(CB_BUTTONS))
 
@@ -81,27 +81,29 @@ async def callbacks(bot: Client, updatex: CallbackQuery):
     rndm = uuid.uuid4().hex
     dirs = f'./{rndm}/'
     os.mkdir(dirs)
+    xx = re.findall(r'(track|album|artist|playlist)', url, re.M)[0].capitalize()
     await runcmd(f"spotdl {url} --path-template '{rndm}" + "/{artist}/{album}/{artist} - {title}.{ext}'")
     art_list = os.listdir(dirs)
-    artist_names = ''
-    for artist in art_list:
-        artist_names += f' {artist},'
-    names = artist_names[1:-1]
     if cb_data == 'zip':
         x = 'zipped music files'
+        dldirs = [i async for i in absolute_paths(dirs)]
+        if len(dldirs) == 1:
+            x = os.path.splitext(os.path.basename(dldirs[0]))[0]
         for artist in art_list:
             shutil.make_archive(dirs+'/'+artist, 'zip', dirs+'/'+artist)
             await update.reply_document(dirs+'/'+artist+'.zip')
     elif cb_data == '1by1':
-        x = 'all musics'
+        x = 'all music files'
         dldirs = [i async for i in absolute_paths(dirs)]
+        if len(dldirs) == 1:
+            x = os.path.splitext(os.path.basename(dldirs[0]))[0]
         for music in dldirs:
             try:
                 await bot.send_audio(chat_id=update.from_user.id, audio=music)
             except FloodWait as e:
                 await asyncio.sleep(e.x)
                 await bot.send_audio(chat_id=update.from_user.id, audio=music)
-    await update.reply(f'Successfully uploaded {x} from [{names}]({url})\'s Spotify', parse_mode='markdown')
+    await update.reply(f'Successfully uploaded {x} from a Spotify {xx} [ㅤ]({url})', parse_mode='markdown')
     shutil.rmtree(dirs)
 
 
