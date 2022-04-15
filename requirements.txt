@@ -1,3 +1,6 @@
 pyrogram
 tgcrypto
 spotdl
+motor
+dnspython
+pyromod

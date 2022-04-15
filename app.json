@@ -27,8 +27,13 @@
       "description": "Your API Hash, as a string. Get this value from https://my.telegram.org",
       "value": ""
     },
-    "OWNER_ID": {
-      "description": "Your Telegram ID, not username. Get this value by opening https://t.me/MissRose_bot and send /id to bot. Leave empty if you want bot as public.",
+    "OWNER_IDS": {
+      "description": "Your Telegram ID (can be more than 1 ids, separated by space), not username. Get this value by opening https://t.me/MissRose_bot and send /id to bot. Leave empty if you want bot as public.",
+      "value": "",
+      "required": false
+    },
+    "MONGO_DB_URL": {
+      "description": "Your Mongo DB URL. Watch: https://youtu.be/0aYrJTfYBHU. You can also leave it empty. but your bot will have just some limited feature.",
       "value": "",
       "required": false
     }
